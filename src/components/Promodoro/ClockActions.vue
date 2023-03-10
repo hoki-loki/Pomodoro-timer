@@ -6,24 +6,28 @@ let btn_start = ref<HTMLButtonElement | null>(null)
 let reload = ref<HTMLButtonElement | null>(null)
 
 
-let changeState = computed(() => {
+let changeStateStart = computed(() => {
   if (btn_start.value) {
     return show.value ? 'start' : 'pause';
   }
 })
 
 let changeStateReload = () => {
+  if (reload.value)
+    reload.value.style.animationName = 'spin'
+
   setTimeout(() => {
-    if (reload.value)
-      console.log('sdfd')
-  }, 500)
+    if (reload.value) {
+      reload.value.style.animationName = 'none'
+    }
+  }, 1000)
 }
 
 </script>
 
 <template>
   <div class="pomodoro-clock-actions flex gap-1r">
-    <button class="button-start" ref="btn_start" @click="show = !show">{{ changeState }}</button>
+    <button class="button-start" ref="btn_start" @click="show = !show">{{ changeStateStart }}</button>
     <button class="reload-timer" ref="reload" @click="changeStateReload" style="animation-name: none">
       <svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 24 24" fill="none" stroke="#ffffff"
            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
