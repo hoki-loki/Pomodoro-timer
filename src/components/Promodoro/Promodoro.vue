@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import Nav from './Nav.vue'
+import PromodoroNav from './PromodoroNav.vue'
 import ClockActions from './ClockActions.vue'
+
 
 </script>
 
 <template>
   <div class="promodoro-container">
-   <Nav />
+   <PromodoroNav />
     <div class="promodoro-timer">1:33:55</div>
     <ClockActions />
   </div>

@@ -1,18 +1,26 @@
 <script setup lang="ts">
 import Promodoro from './components/Promodoro/Promodoro.vue'
+import Settings from "./components/Modal/Modal.vue";
+import useModal from "./stores/modal";
+
+const store = useModal()
+
 </script>
 
 <template>
   <div class="bg-wallpaper">
-    <img src="/public/wallpapers/girl-among-sakura`s.jpg" alt="bg-wallpaper">
+    <img src="/wallpapers/GirlAmongSakura%60s.jpg" alt="bg-wallpaper">
   </div>
     <div class="layout">
       <Promodoro/>
+      <Settings :class="{'show': store.isOpenModal}"/>
     </div>
 
 </template>
 
 <style scoped lang="scss">
+
+
 .bg-wallpaper {
   position: fixed;
   top: 0;
