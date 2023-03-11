@@ -7,7 +7,7 @@ export const useModal = defineStore("modal", () => {
 
     const isOpenModal = computed(() => modal.value !== false);
 
-    makePersistent(modal, "modal", false)
+    makePersistent(modal, "modal")
 
     const setModal = (value: boolean) => {
          modal.value = value;
