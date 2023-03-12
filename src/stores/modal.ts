@@ -5,7 +5,7 @@ import {makePersistent} from "../helpers/persistence";
 export const useModal = defineStore("modal", () => {
     const modal = ref<boolean | object | null>(null);
 
-    const isOpenModal = computed(() => modal.value !== false);
+    const isOpenModal = computed(() => modal.value === true);
 
     makePersistent(modal, "modal")
 

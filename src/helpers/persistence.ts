@@ -16,11 +16,8 @@ export const makePersistent = (reference: Ref<AllowedTypes>, store_name: string)
         }
     }
 
-    watch(reference, (newValue) => {
-        let modal = {
-            isOpen: newValue
-        }
-        let value = JSON.stringify(modal)
+    watch(reference,(newValue) => {
+        let value = JSON.stringify(newValue)
         localStorage.setItem(store_name,  value);
     }, {
         deep: true

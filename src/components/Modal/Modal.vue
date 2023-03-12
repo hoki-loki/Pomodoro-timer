@@ -1,9 +1,26 @@
 <script setup lang="ts">
 import ModalNav from './ModalNav.vue'
 import ModalFooter from './ModalFooter.vue'
-import ModalHeader from "./Settings/ModalHeader.vue";
-import SettingsTimer from "./Settings/SettingsTimer.vue";
+import ModalHeader from "./ModalHeader.vue";
+import SettingsTimers from "./Settings/SettingsTimers.vue";
+import SettingsGeneral from "./Settings/SettingsGeneral.vue";
+import SettingsSounds from "./Settings/SettingsSounds.vue";
+import useEventsBus from "../../helpers/bus";
+import {onMounted, reactive, ref, watch} from "vue";
 
+const {recieve} = useEventsBus()
+
+let activeSection = reactive({
+  name: 'general'
+})
+
+const ActiveSection = (value: any) => {
+  watch(value, (nameVal) => activeSection.name = nameVal.name)
+}
+
+onMounted(() => {
+  recieve('activeSection', ActiveSection)
+})
 </script>
 
 <template>
@@ -13,9 +30,12 @@ import SettingsTimer from "./Settings/SettingsTimer.vue";
       <div class="modal-content flex w-full gap-2r">
         <ModalNav/>
         <div class="modal-body">
-          <SettingsTimer/>
+          <SettingsTimers :class="{'show' : activeSection.name === 'timers'}"/>
+          <SettingsGeneral :class="{'show' : activeSection.name === 'general'} "/>
+          <SettingsSounds :class="{'show' : activeSection.name === 'sounds'} "/>
         </div>
       </div>
+
       <ModalFooter/>
     </div>
   </div>
@@ -24,7 +44,7 @@ import SettingsTimer from "./Settings/SettingsTimer.vue";
 
 <style scoped lang="scss">
 .modal {
-  transition: 0.4s ease-in-out ,opacity 0.6s ease-in-out;
+  transition: 0.4s ease-in-out, opacity 0.6s ease-in-out;
   transform: translateY(-120%);
   opacity: 0;
 

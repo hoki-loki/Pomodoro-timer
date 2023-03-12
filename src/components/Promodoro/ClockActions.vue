@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {computed, ref} from 'vue'
 import useModal from "../../stores/modal";
+import usePromodoro from "../../stores/promodoro";
+import TimeClock from "../../helpers/timer";
 
 const store = useModal()
 
@@ -13,8 +15,8 @@ const changeStateStart = computed(() => {
     return show.value ? 'start' : 'pause';
   }
 })
-
-const changeStateReload = () => {
+let startTimer = () => TimeClock.startTimer();
+const Reload = () => {
   if (reload.value)
     reload.value.style.animationName = 'spin'
 
@@ -22,23 +24,23 @@ const changeStateReload = () => {
     if (reload.value) {
       reload.value.style.animationName = 'none'
     }
-  }, 1000)
+  }, 1000);
 }
 
 </script>
 
 <template>
   <div class="pomodoro-clock-actions flex gap-1r">
-    <button class="button-start icon" ref="btn_start" @click=" show = !show " >
+    <button class="button-start icon" ref="btn_start" @click=" show = !show; startTimer()">
       {{ changeStateStart }}
     </button>
-    <button class="button-reload icon" ref="reload" @click="changeStateReload">
+    <button class="button-reload icon" ref="reload" @click="Reload">
       <svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 24 24" fill="none" stroke="#ffffff"
            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38"/>
       </svg>
     </button>
-    <button class="button-settings icon" @click="store.setModal(true)">
+    <button class="button-settings icon" @click="store.setModal(true )">
       <svg viewBox="0 0 29 29" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><path d="M27.526 18.036 27 17.732c-.626-.361-1-1.009-1-1.732s.374-1.371
       1-1.732l.526-.304a2.999 2.999 0 0 0 1.098-4.098l-1-1.732a3.003 3.003 0 0 0-4.098-1.098L23 7.339a1.977 1.977 0 0 1-2 0 1.98 1.98 0 0 1-1-1.732V5c0-1.654-1.346-3-3-3h-2c-1.654
        0-3 1.346-3 3v.608a1.98 1.98 0 0 1-1 1.732 1.98 1.98 0 0 1-2 0l-.526-.304a3.005 3.005 0 0 0-4.099 1.098l-1 1.732a2.998 2.998 0 0 0 1.098 4.098l.527.304c.626.361 1 1.009 1

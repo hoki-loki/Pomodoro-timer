@@ -1,29 +1,43 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
+import useEventsBus from "./../../helpers/bus";
 
-let activeBtn = ref(1)
-let setActiveBtn = (value: number) => {
-  activeBtn.value = value
+const { emit } = useEventsBus()
+
+let activeBtn = reactive({
+  name: 'general'
+})
+let setActiveBtn = (value: any) => {
+  activeBtn.name = value
 }
+
+onMounted(() => {
+  emit('activeSection', activeBtn)
+
+  watch(activeBtn, (nameVal) => {
+    emit('activeSection', nameVal)
+  })
+})
+
 </script>
 
 <template>
   <div class="settings-nav">
     <div class="nav-element"
-         @click="setActiveBtn(1)"
-         :class="{'active': activeBtn === 1}"
+         @click="setActiveBtn('general')"
+         :class="{'active': activeBtn.name === 'general'}"
     >
       <span>General</span>
     </div>
     <div class="nav-element"
-         @click="setActiveBtn(2)"
-         :class="{'active': activeBtn === 2}"
+         @click="setActiveBtn('timers')"
+         :class="{'active': activeBtn.name === 'timers'}"
     >
       <span>Timers</span>
     </div>
     <div class="nav-element"
-         @click="setActiveBtn(3)"
-         :class="{'active': activeBtn === 3}"
+         @click="setActiveBtn('sounds')"
+         :class="{'active': activeBtn.name === 'sounds'}"
     >
       <span>Sounds</span>
     </div>
