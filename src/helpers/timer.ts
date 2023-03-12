@@ -1,48 +1,88 @@
-import useEventsBus from "./bus";
-import {ref, watch} from "vue";
+interface ITimer_options {
+    timers: any,
+    reload: boolean,
+    activeTimer: string,
+    start: boolean,
+}
 
+interface ITimer extends ITimer_options {
+    seconds: number,
+    interval: number,
+    counter: boolean,
+    time: string,
+}
 
-export class TimeClock {
-    public seconds: number;
-    public interval: number;
-    public counter: boolean;
+export class Timer {
 
-    constructor({seconds, interval, counter}) {
-        this.seconds = seconds;
-        this.interval = interval;
-        this.counter = counter;
+    public timer_options: ITimer_options
+    public timer: ITimer
+
+    // @ts-ignore
+    constructor({timer_options}: timer_options, {timer}: timer) {
+        this.timer_options = timer_options
+        this.timer = timer
+    }
+
+    public async Reset(value: string): Promise<void> {
+        this.timer.time = await this.TimeFormat(this.timer_options.activeTimer)
+        this.timer.seconds = this.timer_options.timers[value]
+        this.timer_options.start = false
+        this.timer.counter = false
+        clearInterval(this.timer.interval)
+    }
+
+    public setActiveBtn (value: string) {
+        this.timer_options.activeTimer = value
+        this.Reset(value)
+    }
+
+    public Reload() {
+        this.timer_options.reload = true
+
+        setTimeout(() => {
+            this.timer_options.reload = false
+        }, 1000);
+
+        this.Reset(this.timer_options.activeTimer)
+    }
+
+    public async TimeFormat(value: any){
+        let t
+
+        if (typeof value === 'string') t = this.timer_options.timers[value]
+        else t = value
+
+        const h = Math.floor(t / 3600).toString().padStart(2, '0'),
+            m = Math.floor(t % 3600 / 60).toString().padStart(2, '0'),
+            s = Math.floor(t % 60).toString().padStart(2, '0');
+
+        if (h === '00')
+           return  this.timer.time = m + ':' + s;
+        else if (h === '00' && m === '00')
+            return this.timer.time = s;
+        else
+            return this.timer.time = h + ':' + m + ':' + s;
     }
 
     public runTimer() {
-        this.seconds--;
+        this.timer.seconds--
 
-        if (this.seconds === 0) {
-            clearInterval(this.interval);
+        if (this.timer.seconds === 0) {
+            this.Reset(this.timer_options.activeTimer)
+            this.timer_options.start = false
         }
     }
 
     public startTimer() {
-        if (!this.counter) {
-            this.interval = setInterval(() => this.runTimer(), 1000);
-            this.counter = true;
+        if (!this.timer.counter) {
+            this.timer.counter = true;
+            this.timer.interval = setInterval(() => this.runTimer(), 1000);
         } else {
-            clearInterval(this.interval);
-            this.counter = false;
+            clearInterval(this.timer.interval);
+            this.timer.counter = false;
         }
-    }
-
-    async getCurrentTime() {
-        console.log(this.seconds)
-        return this.seconds
     }
 }
 
-let timerPromodoro = ref(JSON.parse(localStorage.getItem('promodoro') as string).timers.promodoro)
 
-const timer = new TimeClock({
-    seconds: timerPromodoro.value,
-    interval: null,
-    counter: false,
-});
-
-export default timer
+export default Timer
