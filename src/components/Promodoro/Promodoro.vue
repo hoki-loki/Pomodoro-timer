@@ -4,9 +4,14 @@ import useModal from "../../stores/modal";
 import TimerClass from "../../helpers/timer";
 
 const store = useModal()
+const promodoro = JSON.parse(localStorage.getItem('promodoro') || '{}')
 
 let timer_options = reactive({
-  timers: JSON.parse(localStorage.getItem('promodoro') || '[]').timers,
+  timers: {
+    long: promodoro.timers.long,
+    promodoro:promodoro.timers.promodoro,
+    short: promodoro.timers.short,
+  },
   reload: false,
   activeTimer: 'promodoro',
   start: false
@@ -15,8 +20,7 @@ let timer_options = reactive({
 let timer = reactive({
   interval: null,
   counter: false,
-  seconds: timer_options.timers[timer_options.activeTimer],
-  time: '00:00'
+  seconds: timer_options.timers?.promodoro,
 })
 
 let Timer = new TimerClass({timer_options}, {timer})

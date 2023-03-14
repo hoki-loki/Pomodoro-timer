@@ -1,18 +1,30 @@
 <script setup lang="ts">
 import useModal from "./stores/modal";
+import usePromodoro from "./stores/promodoro";
 import Modal from "./components/Modal/Modal.vue";
 import Promodoro from "./components/Promodoro/Promodoro.vue";
+import { onMounted } from "vue";
 
-const store = useModal()
+const storeModal = useModal()
+const storePromodoro = usePromodoro()
+const { defaultSettings } = usePromodoro()
+let promodoro = localStorage.getItem('promodoro')
+
+const setDefaultSettings = () => !promodoro ? storePromodoro.setPromodoro(defaultSettings) : {}
+
+
+onMounted(() => {
+  setDefaultSettings()
+})
 </script>
 
 <template>
   <div class="bg-wallpaper">
-    <img src="/theme/GirlAmongSakura%60s.jpg" alt="bg-wallpaper">
+    <img  :src="/theme/ + 'PurpleDay.jpg'"  alt="bg-wallpaper">
   </div>
   <div class="layout">
     <Promodoro/>
-    <Modal :class="{'show' : store.isOpenModal}" />
+    <Modal :class="{'show' : storeModal.isOpenModal}" />
   </div>
 
 </template>

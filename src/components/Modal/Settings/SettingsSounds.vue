@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import {onMounted, reactive, ref, watch} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import useEventsBus from "../../../helpers/bus";
 
 const {emit} = useEventsBus()
 
 let alerts = ref(<any>[]);
 
+//toDo: fix get data from localstorage
+const promodoro = JSON.parse(localStorage.getItem('promodoro') || '{}')
+
 let soundsSetting = reactive({
-  alertSound: 'Notification',
-  alertVolume: '',
-  playSound: false,
+  alertSound: promodoro.alertSound,
+  alertVolume: promodoro.alertVolume,
+  playSound: promodoro.playSound,
 })
 
 const importSounds = async () => {
@@ -24,11 +27,11 @@ const importSounds = async () => {
 
 onMounted(() => {
   importSounds()
-
-  watch(soundsSetting, async (newVal) => {
-    emit('updateSoundsSettings', newVal)
-  })
 })
+
+emit('updateSoundsSettings', soundsSetting)
+
+
 </script>
 
 <template>

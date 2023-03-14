@@ -1,3 +1,4 @@
+
 interface ITimer_options {
     timers: any,
     reload: boolean,
@@ -76,6 +77,8 @@ export class Timer {
     public startTimer() {
         if (!this.timer.counter) {
             this.timer.counter = true;
+
+            // @ts-ignore
             this.timer.interval = setInterval(() => this.runTimer(), 1000);
         } else {
             clearInterval(this.timer.interval);

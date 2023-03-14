@@ -1,40 +1,35 @@
 <script setup lang="ts">
 import useEventsBus from "../../helpers/bus";
 import useModal from "../../stores/modal";
+import usePromodoro from "../../stores/promodoro";
 
-const store = useModal()
+const storeModal = useModal()
+const storePromodoro = usePromodoro()
+const {defaultSettings} = usePromodoro()
 const {recieve} = useEventsBus()
-const defaultSettings = {
-  alertSound: "bell",
-  alertVolume: 100,
-  continueTimer: false,
-  hideDiscord: false,
-  playSound: true,
-  showNotifications: true,
-  showSpotify: true,
-  theme: "seoul",
-  timers: {
-    promodoro: 1500,
-    short: 300,
-    long: 600
-  }
-}
+
+//toDo.md fix get data from localstorage
+let promodoroSettings = JSON.parse(localStorage.getItem('promodoro') as string)
+
 const Change = (data: any) => {
-  localStorage.setItem('promodoro', JSON.stringify(Object.assign(defaultSettings, data)))
+  storePromodoro.setPromodoro(Object.assign(promodoroSettings, data))
 }
 const SaveChanges = async () => {
-  await recieve('updateSoundsSettings', Change)
-  await recieve('updateTimersSettings', Change)
   await recieve('updateGeneralSettings', Change)
-  store.setModal(false)
-  location.reload();
+  await recieve('updateTimersSettings', Change)
+  await recieve('updateSoundsSettings', Change)
+  storeModal.setModal(false)
 }
+const ResetAll = () => {
+  storePromodoro.setPromodoro(defaultSettings)
+}
+
 </script>
 
 <template>
   <div class="modal-footer">
-    <button class="reset btn">Reset all</button>
-    <button class="close btn" @click="store.setModal(false)">Close</button>
+    <button class="reset btn" @click="ResetAll">Reset all</button>
+    <button class="close btn" @click="storeModal.setModal(false)">Close</button>
     <button class="save-changes btn" @click="SaveChanges">Save changes</button>
   </div>
 </template>

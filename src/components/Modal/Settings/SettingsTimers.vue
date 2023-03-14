@@ -1,23 +1,22 @@
 <script setup lang="ts">
-import {onMounted, reactive, watch} from "vue";
+import {reactive} from "vue";
 import useEventsBus from "../../../helpers/bus";
 
 const {emit} = useEventsBus()
 
+//toDo: fix get data from localstorage
+const promodoro = JSON.parse(localStorage.getItem('promodoro') || '{}')
+
 let TimersSetting = reactive({
-  continueTimer: true,
+  continueTimer: promodoro.continueTimer,
   timers: {
-    long: 600,
-    promodoro: 1500,
-    short: 300,
+    long: promodoro.timers.long,
+    promodoro: promodoro.timers.promodoro,
+    short: promodoro.timers.short,
   }
 })
 
-onMounted(() => {
-  watch(TimersSetting, async (newVal) => {
-    emit('updateSoundsSettings', newVal)
-  })
-})
+emit('updateTimersSettings', TimersSetting)
 </script>
 
 <template>
@@ -26,29 +25,32 @@ onMounted(() => {
       <div class="col w-full">
         <label>
           Promodoro
-          <input class="form-check-input form-control m-tb-2" v-model="TimersSetting.timers.promodoro" type="number"  step="1" min="1" max="90">
+          <input class="form-check-input form-control m-tb-2" v-model="TimersSetting.timers.promodoro" type="number"
+                 step="1" min="1" max="90">
           <span>minutes</span>
         </label>
       </div>
       <div class="col w-full">
         <label>
           Short Break
-          <input class="form-check-input form-control m-tb-2" v-model="TimersSetting.timers.short" type="number" step="1" min="1" max="60">
+          <input class="form-check-input form-control m-tb-2" v-model="TimersSetting.timers.short" type="number"
+                 step="1" min="1" max="60">
           <span>minutes</span>
         </label>
       </div>
       <div class="col w-full">
         <label>
           Long Break
-          <input class="form-check-input form-control m-tb-2" v-model="TimersSetting.timers.long" type="number" step="1" min="1" max="90">
+          <input class="form-check-input form-control m-tb-2" v-model="TimersSetting.timers.long" type="number" step="1"
+                 min="1" max="90">
           <span>minutes</span>
         </label>
       </div>
     </div>
     <div class="form-check mb-4">
       <label class="flex">
-        <input class="form-check-input" style="width: 4rem;"  v-model="TimersSetting.continueTimer"  type="checkbox">
-          Use the Pomodoro sequence: Pomodoro → short break, repeat 4x, then one long break
+        <input class="form-check-input" style="width: 4rem;" v-model="TimersSetting.continueTimer" type="checkbox">
+        Use the Pomodoro sequence: Pomodoro → short break, repeat 4x, then one long break
       </label>
     </div>
   </div>
@@ -69,7 +71,7 @@ onMounted(() => {
 }
 
 
-label span{
+label span {
   color: rgba(180, 179, 179, 0.89);
 }
 
