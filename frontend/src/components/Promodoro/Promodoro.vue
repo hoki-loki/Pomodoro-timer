@@ -2,6 +2,7 @@
 import {computed, onMounted, reactive, watch} from "vue";
 import useModal from "../../stores/modal";
 import TimerClass from "../../helpers/timer";
+import Spotify from "../Spotify/Spotify.vue";
 
 const store = useModal()
 const promodoro = JSON.parse(localStorage.getItem('promodoro') || '{}')
@@ -23,9 +24,7 @@ let timer = reactive({
   seconds: timer_options.timers?.promodoro,
 })
 
-let audio = new Audio(`../../../../public/alerts/${promodoro.alertSound}.mp3`)
-
-let Timer = new TimerClass({timer_options}, {timer}, {audio})
+let Timer = new TimerClass({timer_options}, {timer})
 
 const changeStateStart = computed(() => timer_options.start ? 'pause' : 'start')
 const spin = computed(() => timer_options.reload ? 'spin' : 'none')
@@ -84,6 +83,7 @@ onMounted(() => {
       </button>
     </div>
   </div>
+  <Spotify />
 </template>
 
 
