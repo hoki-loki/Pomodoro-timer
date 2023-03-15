@@ -9,7 +9,7 @@ const promodoro = JSON.parse(localStorage.getItem('promodoro') || '{}')
 let timer_options = reactive({
   timers: {
     long: promodoro.timers.long,
-    promodoro:promodoro.timers.promodoro,
+    promodoro: promodoro.timers.promodoro,
     short: promodoro.timers.short,
   },
   reload: false,
@@ -23,12 +23,14 @@ let timer = reactive({
   seconds: timer_options.timers?.promodoro,
 })
 
-let Timer = new TimerClass({timer_options}, {timer})
+let audio = new Audio(`../../../../public/alerts/${promodoro.alertSound}.mp3`)
 
-const changeStateStart = computed(() => timer_options.start ? 'pause'  : 'start')
+let Timer = new TimerClass({timer_options}, {timer}, {audio})
+
+const changeStateStart = computed(() => timer_options.start ? 'pause' : 'start')
 const spin = computed(() => timer_options.reload ? 'spin' : 'none')
 
-onMounted(()=> {
+onMounted(() => {
   Timer.TimeFormat(timer.seconds)
 
   watch(timer, (value) => {

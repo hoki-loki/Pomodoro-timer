@@ -6,7 +6,7 @@ import SettingsTimers from "./Settings/SettingsTimers.vue";
 import SettingsGeneral from "./Settings/SettingsGeneral.vue";
 import SettingsSounds from "./Settings/SettingsSounds.vue";
 import useEventsBus from "../../helpers/bus";
-import {onMounted, reactive, ref, watch} from "vue";
+import {onMounted, reactive, watch} from "vue";
 
 const {recieve} = useEventsBus()
 

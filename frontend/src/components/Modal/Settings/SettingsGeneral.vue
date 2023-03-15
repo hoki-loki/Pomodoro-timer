@@ -31,13 +31,12 @@ onMounted(() => {
 emit('updateGeneralSettings', generalSetting)
 </script>
 
-
 <template>
   <div class="container">
     <div class="d-s mb-4">
       <label class="w-full flex flex-col form-label">
         Select theme:
-        <select id="theme" class="form-select" v-model="generalSetting.theme" :value="generalSetting.theme">
+        <select id="theme" class="form-select" v-model="generalSetting.theme">
           <div class="icon">
             <svg viewBox="0 0 50 50" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h50v50H0z"></path>
               <path d="m47.25 15-2.086-2.086L25 33.078 4.836 12.914 2.75 15 25 37.25z" fill="#d9d9d9"

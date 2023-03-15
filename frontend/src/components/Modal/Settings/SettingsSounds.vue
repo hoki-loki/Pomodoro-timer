@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import useEventsBus from "../../../helpers/bus";
 
 const {emit} = useEventsBus()
-
 let alerts = ref(<any>[]);
 
 //toDo: fix get data from localstorage
@@ -31,7 +30,9 @@ onMounted(() => {
 
 emit('updateSoundsSettings', soundsSetting)
 
-
+watch(soundsSetting, (value) => {
+  emit('updateSoundsSettings', value)
+}, {deep: true})
 </script>
 
 <template>

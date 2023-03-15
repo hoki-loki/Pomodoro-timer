@@ -17,12 +17,15 @@ export class Timer {
 
     public timer_options: ITimer_options
     public timer: ITimer
+    public audio: object
 
     // @ts-ignore
-    constructor({timer_options}: timer_options, {timer}: timer) {
+    constructor({timer_options}: timer_options, {timer}: timer, {audio}: audio) {
         this.timer_options = timer_options
         this.timer = timer
+        this.audio = audio
     }
+
 
     public async Reset(value: string): Promise<void> {
         this.timer.time = await this.TimeFormat(this.timer_options.activeTimer)
@@ -71,6 +74,8 @@ export class Timer {
         if (this.timer.seconds === 0) {
             this.Reset(this.timer_options.activeTimer)
             this.timer_options.start = false
+            // @ts-ignore
+            this.audio.play()
         }
     }
 
@@ -80,6 +85,7 @@ export class Timer {
 
             // @ts-ignore
             this.timer.interval = setInterval(() => this.runTimer(), 1000);
+
         } else {
             clearInterval(this.timer.interval);
             this.timer.counter = false;

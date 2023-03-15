@@ -11,8 +11,10 @@ const {recieve} = useEventsBus()
 //toDo.md fix get data from localstorage
 let promodoroSettings = JSON.parse(localStorage.getItem('promodoro') as string)
 
+//toDO: fix dynamic change data in localstorage
 const Change = (data: any) => {
   storePromodoro.setPromodoro(Object.assign(promodoroSettings, data))
+  console.log(Object.assign(promodoroSettings, data))
 }
 const SaveChanges = async () => {
   await recieve('updateGeneralSettings', Change)

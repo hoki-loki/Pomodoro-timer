@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, reactive, ref, watch} from "vue";
+import {onMounted, reactive, watch} from "vue";
 import useEventsBus from "./../../helpers/bus";
 
 const { emit } = useEventsBus()
