@@ -4,27 +4,27 @@ import useModal from "../../stores/modal";
 import TimerClass from "../../helpers/timer";
 import Spotify from "../Spotify/Spotify.vue";
 
-const store = useModal()
 const promodoro = JSON.parse(localStorage.getItem('promodoro') || '{}')
+const store = useModal()
 
 let timer_options = reactive({
   timers: {
-    long: promodoro.timers.long,
+    long:  promodoro.timers.long,
     promodoro: promodoro.timers.promodoro,
-    short: promodoro.timers.short,
+    short:  promodoro.timers.short
   },
   reload: false,
   activeTimer: 'promodoro',
   start: false
 })
-
 let timer = reactive({
   interval: null,
   counter: false,
   seconds: timer_options.timers?.promodoro,
 })
+let audio = new Audio(`../../../../public/alerts/${promodoro.alertSound}.mp3`)
 
-let Timer = new TimerClass({timer_options}, {timer})
+let Timer = new TimerClass({timer_options}, {timer}, {audio})
 
 const changeStateStart = computed(() => timer_options.start ? 'pause' : 'start')
 const spin = computed(() => timer_options.reload ? 'spin' : 'none')

@@ -9,7 +9,7 @@ export const makePersistent = (reference: Ref<AllowedTypes>, store_name: string)
 
     if (value) {
         try {
-            reference.value = value;
+            reference.value = JSON.parse(value);
         } catch (e) {
             console.error("[Pinia] Persistence error:", e);
             return;

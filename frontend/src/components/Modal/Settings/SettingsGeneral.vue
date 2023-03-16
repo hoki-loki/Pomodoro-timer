@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
+import usePromodoro from "../../../stores/promodoro";
 import useEventsBus from "../../../helpers/bus";
 
 const {emit} = useEventsBus()
+const storePromodoro = usePromodoro()
 let themes = ref(<any>[])
 
 //toDo: fix get data from localstorage
@@ -19,16 +21,18 @@ const importTheme = async () => {
 }
 
 let generalSetting = reactive({
-  theme: promodoro.theme,
-  showNotifications: promodoro.showNotifications,
-  showSpotify: promodoro.showSpotify,
+  theme: 'Purple Day',
+  showNotifications: false,
+  showSpotify: true
 })
 
 onMounted(() => {
   importTheme()
 })
 
-emit('updateGeneralSettings', generalSetting)
+watch(generalSetting, (value) => {
+  storePromodoro.setPromodoro(Object.assign(promodoro, value))
+})
 </script>
 
 <template>

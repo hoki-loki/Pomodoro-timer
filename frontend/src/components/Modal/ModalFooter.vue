@@ -1,31 +1,18 @@
 <script setup lang="ts">
-import useEventsBus from "../../helpers/bus";
 import useModal from "../../stores/modal";
 import usePromodoro from "../../stores/promodoro";
 
 const storeModal = useModal()
 const storePromodoro = usePromodoro()
 const {defaultSettings} = usePromodoro()
-const {recieve} = useEventsBus()
 
-//toDo.md fix get data from localstorage
-let promodoroSettings = JSON.parse(localStorage.getItem('promodoro') as string)
-
-//toDO: fix dynamic change data in localstorage
-const Change = (data: any) => {
-  storePromodoro.setPromodoro(Object.assign(promodoroSettings, data))
-  console.log(Object.assign(promodoroSettings, data))
-}
 const SaveChanges = async () => {
-  await recieve('updateGeneralSettings', Change)
-  await recieve('updateTimersSettings', Change)
-  await recieve('updateSoundsSettings', Change)
   storeModal.setModal(false)
+  location.reload()
 }
 const ResetAll = () => {
   storePromodoro.setPromodoro(defaultSettings)
 }
-
 </script>
 
 <template>

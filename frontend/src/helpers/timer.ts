@@ -1,26 +1,29 @@
+
 interface ITimer_options {
-    timers?: any,
-    reload?: boolean,
-    activeTimer?: string,
+    timers: any,
+    reload: boolean,
+    activeTimer: string,
     start: boolean,
 }
 
 interface ITimer extends ITimer_options {
     seconds: number,
-    interval?: number,
+    interval: number,
     counter: boolean,
-    time?: string,
+    time: string,
 }
 
 export class Timer {
 
     public timer_options: ITimer_options
     public timer: ITimer
+    public audio: object
 
     // @ts-ignore
-    constructor({timer_options}: timer_options, {timer}: timer) {
+    constructor({timer_options}: timer_options, {timer}: timer, {audio}: audio) {
         this.timer_options = timer_options
         this.timer = timer
+        this.audio = audio
     }
 
 
@@ -32,7 +35,7 @@ export class Timer {
         clearInterval(this.timer.interval)
     }
 
-    public setActiveBtn(value: string) {
+    public setActiveBtn (value: string) {
         this.timer_options.activeTimer = value
         this.Reset(value)
     }
@@ -44,11 +47,10 @@ export class Timer {
             this.timer_options.reload = false
         }, 1000);
 
-        //@ts-ignore
         this.Reset(this.timer_options.activeTimer)
     }
 
-    public async TimeFormat(value: any) {
+    public async TimeFormat(value: any){
         let t
 
         if (typeof value === 'string') t = this.timer_options.timers[value]
@@ -59,7 +61,7 @@ export class Timer {
             s = Math.floor(t % 60).toString().padStart(2, '0');
 
         if (h === '00')
-            return this.timer.time = m + ':' + s;
+           return  this.timer.time = m + ':' + s;
         else if (h === '00' && m === '00')
             return this.timer.time = s;
         else
@@ -70,8 +72,8 @@ export class Timer {
         this.timer.seconds--
 
         if (this.timer.seconds === 0) {
-            //@ts-ignore
             this.Reset(this.timer_options.activeTimer)
+            this.timer_options.start = false
             // @ts-ignore
             this.audio.play()
         }

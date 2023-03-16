@@ -53,13 +53,17 @@ watch(player, async (update) => {
         <img src="https://i.scdn.co/image/ab67706c0000da842a07ae7bf4baaed76ac0db21" alt="">
       </div>
       <div class="info">
-        <div class="titles">
-<!--          <marquee scrollamount="3">This text will scroll from right to left</marquee>-->
+        <div class="marquee">
+          <div class="marquee__content">
+            <span class="title">hoki-loki 💿 for study, chill, and more</span>
+            <span class="title">hoki-loki 💿 for study, chill, and more</span>
+          </div>
         </div>
+
         <div class="author">Your Eyes · Joey Pecoraro</div>
 
-        <div class="song flex">
-          <div class="song__controls">
+        <div class="player-container flex">
+          <div class="player__controls">
             <div class="prev btn" style="transform: rotate(180deg)">
               <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -67,7 +71,7 @@ watch(player, async (update) => {
                     fill="#c4c4c4" class="fill-212121"></path>
               </svg>
             </div>
-            <div class="song__progress">
+            <div class="player__progress">
               <input type="range"
                      min="0"
                      max="100"
@@ -87,7 +91,7 @@ watch(player, async (update) => {
                         value="0.0923603784090965"
               ></progress>
 
-              <div class="song__tooltip" :style="{ 'left' : player.position + '%' }"> {{ player.time }} </div>
+              <div class="player__tooltip" :style="{ 'left' : player.position + '%' }"> {{ player.time }}</div>
             </div>
             <div class="next btn">
               <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -102,7 +106,9 @@ watch(player, async (update) => {
       </div>
       <div class="play" @click="player.playing = !player.playing; startTimer()">
         <svg v-if="!player.playing" viewBox="0 0 400 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-          <path d="M405.2 232.9 126.8 67.2c-3.4-2-6.9-3.2-10.9-3.2-10.9 0-19.8 9-19.8 20H96v344h.1c0 11 8.9 20 19.8 20 4.1 0 7.5-1.4 11.2-3.4l278.1-165.5c6.6-5.5 10.8-13.8 10.8-23.1s-4.2-17.5-10.8-23.1z" fill="#f7f7f7" class="fill-000000"></path></svg>
+          <path
+              d="M405.2 232.9 126.8 67.2c-3.4-2-6.9-3.2-10.9-3.2-10.9 0-19.8 9-19.8 20H96v344h.1c0 11 8.9 20 19.8 20 4.1 0 7.5-1.4 11.2-3.4l278.1-165.5c6.6-5.5 10.8-13.8 10.8-23.1s-4.2-17.5-10.8-23.1z"
+              fill="#f7f7f7" class="fill-000000"></path></svg>
         <svg v-else viewBox="0 0 14 30" xmlns="http://www.w3.org/2000/svg">
           <g fill="#ffffff" fill-rule="evenodd" class="fill-979797">
             <rect height="20" width="3" x="11"></rect>
@@ -149,16 +155,7 @@ watch(player, async (update) => {
 
   .info {
     padding: 15px 9px;
-
-    .titles {
-      width: calc(100% - 100px);
-      white-space: nowrap;
-      will-change: transform;
-      overflow: hidden;
-      font-size: 13px;
-      margin-bottom: 5px;
-      animation: 6.71s linear 500ms 1 normal none running animation-1fh7g0a;
-    }
+    width: 200px;
 
     .author {
       font-size: 11px;
@@ -195,8 +192,63 @@ watch(player, async (update) => {
   }
 }
 
+.marquee {
+  height: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: relative;
+  margin-bottom: 10px;
 
-.song {
+  &:before, &:after {
+    position: absolute;
+    top: 0;
+    height: 15px;
+    content: "";
+    z-index: 1;
+  }
+
+  &:before {
+    left: -5px;
+    background: linear-gradient(100deg, rgb(40, 40, 40), rgba(40, 40, 40, 0));
+    width: 15px;
+  }
+
+  &:after {
+    right: -4px;
+    background: linear-gradient(270deg, rgb(40, 40, 40), rgba(40, 40, 40, 0));
+    width: 50px;
+  }
+
+  .marquee__content {
+    width: 300%;
+    display: flex;
+    line-height: 15px;
+    animation: marquee 10s linear infinite forwards;
+    gap: 10px;
+
+    &:hover {
+      animation-play-state: paused;
+    }
+
+    .title {
+      font-size: 13px;
+    }
+  }
+}
+
+
+.list-inline {
+  display: flex;
+  justify-content: space-around;
+  width: 33.33%;
+  /* reset list */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.player-container {
   gap: 1rem;
   align-items: center;
   margin-top: 10px;
@@ -206,14 +258,14 @@ watch(player, async (update) => {
   }
 }
 
-.song__controls {
+.player__controls {
   width: 100px;
   position: relative;
   display: flex;
 
   .prev, .next {
     height: 25px;
-    width: 25px;
+    width: 40px;
 
     &:hover {
       svg, path {
@@ -223,7 +275,7 @@ watch(player, async (update) => {
   }
 }
 
-.song__progress {
+.player__progress {
   left: calc(var(--plyr-range-thumb-height, 13px) * .5);
   margin-right: var(--plyr-range-thumb-height, 13px);
   position: relative;
@@ -276,37 +328,37 @@ watch(player, async (update) => {
     top: 50%;
   }
 
-  .song__tooltip {
+  .player__tooltip {
     max-width: 120px;
     overflow-wrap: break-word;
-    background: hsla(0,0%,100%,.9);
-    background: var(--plyr-tooltip-background,hsla(0,0%,100%,.9));
-    border-radius: var(--plyr-tooltip-radius,5px);
+    background: hsla(0, 0%, 100%, .9);
+    background: var(--plyr-tooltip-background, hsla(0, 0%, 100%, .9));
+    border-radius: var(--plyr-tooltip-radius, 5px);
     bottom: 100%;
-    box-shadow: var(--plyr-tooltip-shadow,0 1px 2px rgba(0,0,0,.15));
-    color: var(--plyr-tooltip-color,#4a5464);
-    font-size: var(--plyr-font-size-small,13px);
-    font-weight: var(--plyr-font-weight-regular,400);
+    box-shadow: var(--plyr-tooltip-shadow, 0 1px 2px rgba(0, 0, 0, .15));
+    color: var(--plyr-tooltip-color, #4a5464);
+    font-size: var(--plyr-font-size-small, 13px);
+    font-weight: var(--plyr-font-weight-regular, 400);
     line-height: 1.3;
-    margin-bottom: calc(var(--plyr-control-spacing,10px)/2*2);
+    margin-bottom: calc(var(--plyr-control-spacing, 10px) / 2 * 2);
     opacity: 0;
-    padding: calc(var(--plyr-control-spacing,10px)/2) calc(var(--plyr-control-spacing,10px)/2*1.5);
+    padding: calc(var(--plyr-control-spacing, 10px) / 2) calc(var(--plyr-control-spacing, 10px) / 2 * 1.5);
     pointer-events: none;
     position: absolute;
-    transform: translate(-50%,10px) scale(.8);
+    transform: translate(-50%, 10px) scale(.8);
     transform-origin: 50% 100%;
-    transition: transform .2s ease .1s,opacity .2s ease .1s;
+    transition: transform .2s ease .1s, opacity .2s ease .1s;
     white-space: nowrap;
     z-index: 2;
 
     &:before {
       border-left: 4px solid transparent;
-      border-left: var(--plyr-tooltip-arrow-size,4px) solid transparent;
+      border-left: var(--plyr-tooltip-arrow-size, 4px) solid transparent;
       border-right: 4px solid transparent;
-      border-right: var(--plyr-tooltip-arrow-size,4px) solid transparent;
-      border-top: 4px solid hsla(0,0%,100%,.9);
-      border-top: var(--plyr-tooltip-arrow-size,4px) solid var(--plyr-tooltip-background,hsla(0,0%,100%,.9));
-      bottom: calc(var(--plyr-tooltip-arrow-size,4px)*-1);
+      border-right: var(--plyr-tooltip-arrow-size, 4px) solid transparent;
+      border-top: 4px solid hsla(0, 0%, 100%, .9);
+      border-top: var(--plyr-tooltip-arrow-size, 4px) solid var(--plyr-tooltip-background, hsla(0, 0%, 100%, .9));
+      bottom: calc(var(--plyr-tooltip-arrow-size, 4px) * -1);
       content: "";
       height: 0;
       left: 50%;

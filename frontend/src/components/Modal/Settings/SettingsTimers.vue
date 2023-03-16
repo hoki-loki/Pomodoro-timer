@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import {reactive} from "vue";
+import {reactive, watch} from "vue";
 import useEventsBus from "../../../helpers/bus";
+import usePromodoro from "../../../stores/promodoro";
 
 const {emit} = useEventsBus()
+const storePromodoro = usePromodoro()
 
 //toDo: fix get data from localstorage
 const promodoro = JSON.parse(localStorage.getItem('promodoro') || '{}')
 
 let TimersSetting = reactive({
-  continueTimer: promodoro.continueTimer,
+  continueTimer:  promodoro.continueTimer,
   timers: {
     long: promodoro.timers.long,
     promodoro: promodoro.timers.promodoro,
@@ -16,7 +18,9 @@ let TimersSetting = reactive({
   }
 })
 
-emit('updateTimersSettings', TimersSetting)
+watch(TimersSetting, (value) => {
+  storePromodoro.setPromodoro(Object.assign(promodoro, value))
+})
 </script>
 
 <template>

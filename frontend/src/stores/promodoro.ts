@@ -21,6 +21,7 @@ export const usePromodoro = defineStore("promodoro", () => {
     }
     const promodoro = ref<AllowedTypes>(null);
 
+
     makePersistent(promodoro, "promodoro")
 
     const setPromodoro = (value: object) => {

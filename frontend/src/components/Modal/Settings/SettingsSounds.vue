@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import {onMounted, reactive, ref, watch} from "vue";
+import usePromodoro from "../../../stores/promodoro";
 import useEventsBus from "../../../helpers/bus";
 
 const {emit} = useEventsBus()
+const storePromodoro = usePromodoro()
 let alerts = ref(<any>[]);
 
 //toDo: fix get data from localstorage
@@ -10,8 +12,8 @@ const promodoro = JSON.parse(localStorage.getItem('promodoro') || '{}')
 
 let soundsSetting = reactive({
   alertSound: promodoro.alertSound,
-  alertVolume: promodoro.alertVolume,
-  playSound: promodoro.playSound,
+  alertVolume:  promodoro.alertVolume,
+  playSound: promodoro.playSound
 })
 
 const importSounds = async () => {
@@ -28,11 +30,9 @@ onMounted(() => {
   importSounds()
 })
 
-emit('updateSoundsSettings', soundsSetting)
-
 watch(soundsSetting, (value) => {
-  emit('updateSoundsSettings', value)
-}, {deep: true})
+  storePromodoro.setPromodoro(Object.assign(promodoro, value))
+})
 </script>
 
 <template>
@@ -61,7 +61,7 @@ watch(soundsSetting, (value) => {
     <div class="mb-4">
       <label class="form-label alert-volume">
         Alert volume:
-        <input type="range" v-model="soundsSetting.alertVolume" class="form-volume form-range"  id="alertSoundVolume" min="0" max="100" step="1">
+        <input type="range" v-model="soundsSetting.alertVolume" class="form-volume form-range" id="alertSoundVolume" min="0" max="100" step="1">
       </label>
     </div>
   </div>

@@ -3,24 +3,25 @@ import useModal from "./stores/modal";
 import usePromodoro from "./stores/promodoro";
 import Modal from "./components/Modal/Modal.vue";
 import Promodoro from "./components/Promodoro/Promodoro.vue";
-import { onMounted } from "vue";
+import {onMounted, ref, watch} from "vue";
 
 const storeModal = useModal()
 const storePromodoro = usePromodoro()
 const { defaultSettings } = usePromodoro()
-let promodoro = localStorage.getItem('promodoro')
-
+let promodoro = ref(JSON.parse(localStorage.getItem('promodoro') as string).theme.split(' ').join('') + '.jpg')
 const setDefaultSettings = () => !promodoro ? storePromodoro.setPromodoro(defaultSettings) : {}
 
-
 onMounted(() => {
-  setDefaultSettings()
+})
+
+watch(promodoro, (value) => {
+  promodoro.value = value
 })
 </script>
 
 <template>
   <div class="bg-wallpaper">
-    <img  :src="/theme/ + 'PurpleDay.jpg'"  alt="bg-wallpaper">
+    <img  :src="/theme/ + promodoro"  alt="bg-wallpaper">
   </div>
   <div class="layout">
     <Promodoro/>
