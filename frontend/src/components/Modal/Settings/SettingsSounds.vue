@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import {onMounted, reactive, ref, watch} from "vue";
+import {computed, onMounted, reactive, ref, watch} from "vue";
 import usePromodoro from "../../../stores/promodoro";
-import useEventsBus from "../../../helpers/bus";
 
-const {emit} = useEventsBus()
 const storePromodoro = usePromodoro()
+const {defaultSettings, promodoro} = usePromodoro()
 let alerts = ref(<any>[]);
 
-//toDo: fix get data from localstorage
-const promodoro = JSON.parse(localStorage.getItem('promodoro') || '{}')
+const _promodoro: any = computed(() => promodoro ? promodoro : defaultSettings)
 
 let soundsSetting = reactive({
-  alertSound: promodoro.alertSound,
-  alertVolume:  promodoro.alertVolume,
-  playSound: promodoro.playSound
+  alertSound: _promodoro.value.alertSound,
+  alertVolume:  _promodoro.value.alertVolume,
+  playSound: _promodoro.value.playSound
 })
 
 const importSounds = async () => {
@@ -31,7 +29,7 @@ onMounted(() => {
 })
 
 watch(soundsSetting, (value) => {
-  storePromodoro.setPromodoro(Object.assign(promodoro, value))
+  storePromodoro.setPromodoro(Object.assign(_promodoro.value, value))
 })
 </script>
 

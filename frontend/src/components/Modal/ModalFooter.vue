@@ -12,6 +12,7 @@ const SaveChanges = async () => {
 }
 const ResetAll = () => {
   storePromodoro.setPromodoro(defaultSettings)
+  location.reload()
 }
 </script>
 

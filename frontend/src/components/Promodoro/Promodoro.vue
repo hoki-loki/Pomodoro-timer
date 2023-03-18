@@ -3,16 +3,23 @@ import {computed, onMounted, reactive, watch} from "vue";
 import useModal from "../../stores/modal";
 import TimerClass from "../../helpers/timer";
 import Spotify from "../Spotify/Spotify.vue";
+import usePromodoro from "../../stores/promodoro";
 
-const promodoro = JSON.parse(localStorage.getItem('promodoro') || '{}')
+const {defaultSettings} = usePromodoro()
 const store = useModal()
+const { promodoro }  = usePromodoro()
+
+const _promodoro: any = computed(() => promodoro ? promodoro : defaultSettings)
 
 let timer_options = reactive({
   timers: {
-    long:  promodoro.timers.long,
-    promodoro: promodoro.timers.promodoro,
-    short:  promodoro.timers.short
+    long:  _promodoro.value.timers.long,
+    promodoro: _promodoro.value.timers.promodoro,
+    short:  _promodoro.value.timers.short
   },
+  alertVolume: _promodoro.value.alertVolume,
+  continueTimer: _promodoro.value.continueTimer,
+  playSound: _promodoro.value.playSound,
   reload: false,
   activeTimer: 'promodoro',
   start: false
@@ -22,10 +29,15 @@ let timer = reactive({
   counter: false,
   seconds: timer_options.timers?.promodoro,
 })
-let audio = new Audio(`../../../../public/alerts/${promodoro.alertSound}.mp3`)
 
+//AUDIO
+let audio = new Audio(`../../../../public/alerts/${_promodoro.value.alertSound}.mp3`)
+audio.volume = _promodoro.value.alertVolume / 100
+
+//TIMER
 let Timer = new TimerClass({timer_options}, {timer}, {audio})
 
+//FUNCTIONS
 const changeStateStart = computed(() => timer_options.start ? 'pause' : 'start')
 const spin = computed(() => timer_options.reload ? 'spin' : 'none')
 

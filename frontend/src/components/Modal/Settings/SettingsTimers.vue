@@ -1,25 +1,23 @@
 <script setup lang="ts">
-import {reactive, watch} from "vue";
-import useEventsBus from "../../../helpers/bus";
+import {computed, reactive, watch} from "vue";
 import usePromodoro from "../../../stores/promodoro";
 
-const {emit} = useEventsBus()
 const storePromodoro = usePromodoro()
+const {defaultSettings, promodoro} = usePromodoro()
 
-//toDo: fix get data from localstorage
-const promodoro = JSON.parse(localStorage.getItem('promodoro') || '{}')
+const _promodoro = computed(() => promodoro ? promodoro : defaultSettings)
 
 let TimersSetting = reactive({
-  continueTimer:  promodoro.continueTimer,
+  continueTimer:  _promodoro.value.continueTimer,
   timers: {
-    long: promodoro.timers.long,
-    promodoro: promodoro.timers.promodoro,
-    short: promodoro.timers.short,
+    long: _promodoro.value.timers.long,
+    promodoro: _promodoro.value.timers.promodoro,
+    short: _promodoro.value.timers.short,
   }
 })
 
 watch(TimersSetting, (value) => {
-  storePromodoro.setPromodoro(Object.assign(promodoro, value))
+  storePromodoro.setPromodoro(Object.assign(_promodoro.value, value))
 })
 </script>
 

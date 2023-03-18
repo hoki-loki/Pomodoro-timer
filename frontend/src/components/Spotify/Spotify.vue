@@ -5,7 +5,6 @@ let player = reactive({
   playing: false,
   position: 0,
   time: '00:00',
-  constant_time: '00:00',
   duration: 1433.01491,
   counter: false,
   current_duration: 0,
@@ -26,7 +25,6 @@ const runTimer = () => {
     player.playing = false
   }
 }
-
 const startTimer = () => {
   if (!player.counter) {
     player.counter = true;

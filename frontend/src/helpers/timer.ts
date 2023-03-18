@@ -1,9 +1,10 @@
-
 interface ITimer_options {
     timers: any,
     reload: boolean,
     activeTimer: string,
     start: boolean,
+    playSound: boolean,
+    continueTimer: boolean,
 }
 
 interface ITimer extends ITimer_options {
@@ -18,12 +19,14 @@ export class Timer {
     public timer_options: ITimer_options
     public timer: ITimer
     public audio: object
+    public timer_count: number
 
     // @ts-ignore
     constructor({timer_options}: timer_options, {timer}: timer, {audio}: audio) {
         this.timer_options = timer_options
         this.timer = timer
         this.audio = audio
+        this.timer_count = 0
     }
 
 
@@ -35,7 +38,7 @@ export class Timer {
         clearInterval(this.timer.interval)
     }
 
-    public setActiveBtn (value: string) {
+    public setActiveBtn(value: string) {
         this.timer_options.activeTimer = value
         this.Reset(value)
     }
@@ -50,7 +53,7 @@ export class Timer {
         this.Reset(this.timer_options.activeTimer)
     }
 
-    public async TimeFormat(value: any){
+    public async TimeFormat(value: any) {
         let t
 
         if (typeof value === 'string') t = this.timer_options.timers[value]
@@ -61,21 +64,46 @@ export class Timer {
             s = Math.floor(t % 60).toString().padStart(2, '0');
 
         if (h === '00')
-           return  this.timer.time = m + ':' + s;
+            return this.timer.time = m + ':' + s;
         else if (h === '00' && m === '00')
             return this.timer.time = s;
         else
             return this.timer.time = h + ':' + m + ':' + s;
     }
 
+    public PushNotification() {
+        new Notification('Promodoro', {
+            body: 'Time is up!',
+            icon: 'https://i.imgur.com/6lD4V1y.png'
+        })
+    }
+
     public runTimer() {
         this.timer.seconds--
 
         if (this.timer.seconds === 0) {
-            this.Reset(this.timer_options.activeTimer)
-            this.timer_options.start = false
+            if (this.timer_options.activeTimer === 'short') {
+                this.timer.seconds = this.timer_options.timers[this.timer_options.activeTimer]
+                if (this.timer_options.continueTimer) this.timer_options.activeTimer = 'promodoro'
+                else this.timer_options.activeTimer = 'long'
+
+                this.timer_count++
+
+                if (this.timer_count === 4 && this.timer_options.continueTimer) {
+                    this.timer_options.activeTimer = 'long'
+                    this.timer_count = 0
+                }
+            } else if (this.timer_options.activeTimer === 'long') {
+                this.timer_options.activeTimer = 'promodoro'
+                this.timer.seconds = this.timer_options.timers[this.timer_options.activeTimer]
+            } else {
+                this.timer_options.activeTimer = 'short'
+                this.timer.seconds = this.timer_options.timers[this.timer_options.activeTimer]
+            }
+
             // @ts-ignore
-            this.audio.play()
+            if (this.timer_options.playSound) this.audio.play()
+            this.PushNotification()
         }
     }
 

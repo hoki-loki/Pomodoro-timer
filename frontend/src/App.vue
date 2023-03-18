@@ -1,27 +1,31 @@
 <script setup lang="ts">
 import useModal from "./stores/modal";
-import usePromodoro from "./stores/promodoro";
 import Modal from "./components/Modal/Modal.vue";
 import Promodoro from "./components/Promodoro/Promodoro.vue";
-import {onMounted, ref, watch} from "vue";
+import {computed, watch, onMounted} from "vue";
+import usePromodoro from "./stores/promodoro";
 
-const storeModal = useModal()
 const storePromodoro = usePromodoro()
-const { defaultSettings } = usePromodoro()
-let promodoro = ref(JSON.parse(localStorage.getItem('promodoro') as string).theme.split(' ').join('') + '.jpg')
-const setDefaultSettings = () => !promodoro ? storePromodoro.setPromodoro(defaultSettings) : {}
+const {defaultSettings, promodoro} =  usePromodoro()
+const storeModal = useModal()
+
+const _promodoro = computed(() => promodoro ? promodoro : defaultSettings)
+
+const theme = _promodoro.value.theme.split(' ').join('') + '.jpg'
+
+watch(_promodoro, (value) => {
+  storePromodoro.setPromodoro(value)
+})
 
 onMounted(() => {
+  storePromodoro.setPromodoro(_promodoro.value)
 })
 
-watch(promodoro, (value) => {
-  promodoro.value = value
-})
 </script>
 
 <template>
   <div class="bg-wallpaper">
-    <img  :src="/theme/ + promodoro"  alt="bg-wallpaper">
+    <img  :src="/theme/ + theme"  alt="bg-wallpaper">
   </div>
   <div class="layout">
     <Promodoro/>

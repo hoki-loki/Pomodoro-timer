@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import {onMounted, reactive, ref, watch} from "vue";
+import {computed, onMounted, reactive, ref, watch} from "vue";
 import usePromodoro from "../../../stores/promodoro";
-import useEventsBus from "../../../helpers/bus";
 
-const {emit} = useEventsBus()
 const storePromodoro = usePromodoro()
+const { promodoro }  = usePromodoro()
 let themes = ref(<any>[])
 
-//toDo: fix get data from localstorage
-const promodoro = JSON.parse(localStorage.getItem('promodoro') || '{}')
+const _promodoro = computed(() => promodoro ? promodoro : storePromodoro.defaultSettings)
+
+let generalSetting = reactive({
+  theme: _promodoro.value.theme,
+  showNotifications: _promodoro.value.showNotifications,
+  showSpotify: _promodoro.value.showSpotify
+})
 
 const importTheme = async () => {
   let imagesPath = await import.meta.glob('../../../../public/theme/*.*')
@@ -20,18 +24,12 @@ const importTheme = async () => {
   )
 }
 
-let generalSetting = reactive({
-  theme: 'Purple Day',
-  showNotifications: false,
-  showSpotify: true
-})
-
 onMounted(() => {
   importTheme()
 })
 
 watch(generalSetting, (value) => {
-  storePromodoro.setPromodoro(Object.assign(promodoro, value))
+  storePromodoro.setPromodoro(Object.assign(_promodoro.value, value))
 })
 </script>
 

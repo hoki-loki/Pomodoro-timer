@@ -4,9 +4,9 @@ import {makePersistent} from "../helpers/persistence";
 
 type AllowedTypes = string | number | boolean | object | Object | Array<any> | undefined | null;
 
-export const usePromodoro = defineStore("promodoro", () => {
+export const  usePromodoro = defineStore("promodoro", () => {
     const defaultSettings: string | object = {
-        theme: 'PurpleDay.jpg',
+        theme: 'PurpleDay',
         showNotifications: true,
         showSpotify: true,
         continueTimer: false,
@@ -19,8 +19,8 @@ export const usePromodoro = defineStore("promodoro", () => {
             short: 5,
         }
     }
-    const promodoro = ref<AllowedTypes>(null);
 
+    const promodoro = ref<AllowedTypes>(null);
 
     makePersistent(promodoro, "promodoro")
 
