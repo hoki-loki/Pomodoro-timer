@@ -46,7 +46,7 @@ onMounted(() => {
 
   watch(timer, (value) => {
     Timer.TimeFormat(value.seconds)
-  }, {deep: true})
+  })
 })
 </script>
 
@@ -95,7 +95,7 @@ onMounted(() => {
       </button>
     </div>
   </div>
-  <Spotify />
+  <Spotify v-if="_promodoro.showSpotify"/>
 </template>
 
 
