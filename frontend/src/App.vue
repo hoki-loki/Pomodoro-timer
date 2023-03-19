@@ -4,28 +4,28 @@ import Modal from "./components/Modal/Modal.vue";
 import Promodoro from "./components/Promodoro/Promodoro.vue";
 import {computed, watch, onMounted} from "vue";
 import usePromodoro from "./stores/promodoro";
+import {storeToRefs} from "pinia";
 
 const storePromodoro = usePromodoro()
-const {defaultSettings, promodoro} =  usePromodoro()
+const {promodoro} =  usePromodoro()
 const storeModal = useModal()
 
-const _promodoro = computed(() => promodoro ? promodoro : defaultSettings)
 
-const theme = _promodoro.value.theme.split(' ').join('') + '.jpg'
+const { theme_image } = storeToRefs(storePromodoro);
 
-watch(_promodoro, (value) => {
+watch(promodoro, (value) => {
   storePromodoro.setPromodoro(value)
 })
 
 onMounted(() => {
-  storePromodoro.setPromodoro(_promodoro.value)
+  storePromodoro.setPromodoro(promodoro)
 })
 
 </script>
 
 <template>
   <div class="bg-wallpaper">
-    <img  :src="/theme/ + theme"  alt="bg-wallpaper">
+    <img  :src="/theme/ + theme_image"  alt="bg-wallpaper">
   </div>
   <div class="layout">
     <Promodoro/>

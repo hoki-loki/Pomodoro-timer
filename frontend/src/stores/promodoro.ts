@@ -1,11 +1,10 @@
 import {defineStore} from "pinia";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {makePersistent} from "../helpers/persistence";
 
-type AllowedTypes = string | number | boolean | object | Object | Array<any> | undefined | null;
 
 export const  usePromodoro = defineStore("promodoro", () => {
-    const defaultSettings: string | object = {
+    const defaultSetting: object = {
         theme: 'PurpleDay',
         showNotifications: true,
         showSpotify: true,
@@ -20,9 +19,19 @@ export const  usePromodoro = defineStore("promodoro", () => {
         }
     }
 
-    const promodoro = ref<AllowedTypes>(null);
+    const promodoro = ref(defaultSetting)
 
     makePersistent(promodoro, "promodoro")
+
+    const theme_image = computed(() => {
+        // @ts-ignore
+        return promodoro.value.theme.split(' ').join('') + '.jpg';
+    });
+
+    const getPromodoro = computed( () => {
+        return promodoro.value
+    });
+
 
     const setPromodoro = (value: object) => {
         promodoro.value = value;
@@ -30,8 +39,9 @@ export const  usePromodoro = defineStore("promodoro", () => {
 
     return {
         promodoro,
+        theme_image,
+        getPromodoro,
         setPromodoro,
-        defaultSettings,
     }
 
 });
