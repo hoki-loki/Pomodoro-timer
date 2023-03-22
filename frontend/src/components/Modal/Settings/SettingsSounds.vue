@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import {computed, onMounted, reactive, ref, watch} from "vue";
+import { onMounted, reactive, ref, watch} from "vue";
 import usePromodoro from "../../../stores/promodoro";
 
 const storePromodoro = usePromodoro()
-const {defaultSettings, promodoro} = usePromodoro()
+const { promodoro} = usePromodoro()
 let alerts = ref(<any>[]);
 
-const _promodoro: any = computed(() => promodoro ? promodoro : defaultSettings)
-
 let soundsSetting = reactive({
-  alertSound: _promodoro.value.alertSound,
-  alertVolume:  _promodoro.value.alertVolume,
-  playSound: _promodoro.value.playSound
+  alertSound: promodoro.alertSound,
+  alertVolume:  promodoro.alertVolume,
+  playSound: promodoro.playSound
 })
 
 const importSounds = async () => {
@@ -29,7 +27,7 @@ onMounted(() => {
 })
 
 watch(soundsSetting, (value) => {
-  storePromodoro.setPromodoro(Object.assign(_promodoro.value, value))
+  storePromodoro.setPromodoro(Object.assign(promodoro, value))
 })
 </script>
 

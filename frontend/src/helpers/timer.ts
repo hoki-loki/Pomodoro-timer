@@ -71,39 +71,60 @@ export class Timer {
             return this.timer.time = h + ':' + m + ':' + s;
     }
 
-    public PushNotification() {
-        new Notification('Promodoro', {
-            body: 'Time is up!',
-            icon: 'https://i.imgur.com/6lD4V1y.png'
-        })
+    public PushNotification(text: string = 'Time to take a break') {
+        if (!("Notification" in window)) {
+            alert("This browser does not support desktop notification");
+        } else if (Notification.permission === "granted") {
+            const notification = new Notification("Hi there!", {
+                body: text,
+            });
+            setTimeout(() => notification.close(), 1500);
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then((permission) => {
+                if (permission === "granted") {
+                    const notification = new Notification("Hi there!", {
+                        body: text,
+                    });
+                    setTimeout(() => notification.close(), 1500);
+                }
+            });
+        }
+
     }
 
-    public runTimer() {
+    public async runTimer() {
         this.timer.seconds--
 
         if (this.timer.seconds === 0) {
             if (this.timer_options.activeTimer === 'short') {
                 this.timer.seconds = this.timer_options.timers[this.timer_options.activeTimer]
-                if (this.timer_options.continueTimer) this.timer_options.activeTimer = 'promodoro'
-                else this.timer_options.activeTimer = 'long'
+                if (this.timer_options.continueTimer) {
+                    this.timer_options.activeTimer = 'promodoro'
+                    await this.PushNotification('Time to work!')
+                } else {
+                    this.timer_options.activeTimer = 'long'
+                    await this.PushNotification('Time to take a long break!')
+                }
 
                 this.timer_count++
 
                 if (this.timer_count === 4 && this.timer_options.continueTimer) {
                     this.timer_options.activeTimer = 'long'
                     this.timer_count = 0
+                    await this.PushNotification('Time to take a long break!')
                 }
             } else if (this.timer_options.activeTimer === 'long') {
                 this.timer_options.activeTimer = 'promodoro'
                 this.timer.seconds = this.timer_options.timers[this.timer_options.activeTimer]
+                await this.PushNotification('Time to work!')
             } else {
                 this.timer_options.activeTimer = 'short'
                 this.timer.seconds = this.timer_options.timers[this.timer_options.activeTimer]
+                await this.PushNotification()
             }
 
             // @ts-ignore
             if (this.timer_options.playSound) this.audio.play()
-            this.PushNotification()
         }
     }
 

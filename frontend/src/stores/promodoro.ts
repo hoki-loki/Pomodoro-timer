@@ -4,7 +4,7 @@ import {makePersistent} from "../helpers/persistence";
 
 
 export const  usePromodoro = defineStore("promodoro", () => {
-    const defaultSetting: object = {
+    const defaultSetting: any = {
         theme: 'PurpleDay',
         showNotifications: true,
         showSpotify: true,

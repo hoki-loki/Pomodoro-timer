@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {reactive, watch} from "vue";
+import { reactive, watch} from "vue";
 
 let player = reactive({
   playing: false,
@@ -10,9 +10,9 @@ let player = reactive({
   current_duration: 0,
   interval: null,
 })
-
 const finish = new Date(player.duration * 100).toISOString().substr(14, 5)
 
+//TIMER
 const runTimer = () => {
   player.position++
 
@@ -41,7 +41,6 @@ const startTimer = () => {
 watch(player, async (update) => {
   player.time = new Date(update.position * player.duration).toISOString().substr(14, 5)
 })
-
 </script>
 
 <template>

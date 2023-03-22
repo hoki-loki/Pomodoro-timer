@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import {computed, onMounted, reactive, ref, watch} from "vue";
+import { onMounted, reactive, ref, watch} from "vue";
 import usePromodoro from "../../../stores/promodoro";
 
 const storePromodoro = usePromodoro()
 const { promodoro }  = usePromodoro()
+
 let themes = ref(<any>[])
 
-const _promodoro = computed(() => promodoro ? promodoro : storePromodoro.defaultSettings)
-
+//todo: add types to promodoro
 let generalSetting = reactive({
-  theme: _promodoro.value.theme,
-  showNotifications: _promodoro.value.showNotifications,
-  showSpotify: _promodoro.value.showSpotify
+  theme: promodoro.theme,
+  showNotifications: promodoro.showNotifications,
+  showSpotify: promodoro.showSpotify
 })
 
 const importTheme = async () => {
@@ -29,7 +29,7 @@ onMounted(() => {
 })
 
 watch(generalSetting, (value) => {
-  storePromodoro.setPromodoro(Object.assign(_promodoro.value, value))
+  storePromodoro.setPromodoro(Object.assign(promodoro, value))
 })
 </script>
 
